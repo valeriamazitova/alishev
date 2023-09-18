@@ -3,12 +3,9 @@ package org.example.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
-@Table(name = "person")
-public class Person {
+@Table(name = "principal")
+public class Principal {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +17,13 @@ public class Person {
     @Column(name = "age")
     private int age;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToOne(mappedBy = "principal")
     @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
-    private List<Item> items;
+    private School school;
 
-    public Person() {}
+    public Principal() {}
 
-    public Person(String name, int age) {
+    public Principal(String name, int age) {
         this.name = name;
         this.age = age;
     }
@@ -55,26 +52,18 @@ public class Person {
         this.age = age;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public School getSchool() {
+        return school;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-
-    public void addItem(Item item) {
-        if (this.items == null) {
-            this.items = new ArrayList<>();
-        }
-
-        this.items.add(item);
-        item.setOwner(this);
+    public void setSchool(School school) {
+        this.school = school;
+        school.setPrincipal(this);
     }
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "Principal{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +

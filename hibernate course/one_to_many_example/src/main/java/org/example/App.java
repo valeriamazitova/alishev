@@ -73,13 +73,22 @@ public class App
 //
 //            person.getItems().forEach(i -> i.setOwner(null));
 //          7
-            Person person = session.get(Person.class, 4);
+//            Person person = session.get(Person.class, 4);
+//
+//            Item item = session.get(Item.class, 1);
+//            item.getOwner().getItems().remove(item);
+//
+//            item.setOwner(person);
+//            person.getItems().add(item);
 
-            Item item = session.get(Item.class, 1);
-            item.getOwner().getItems().remove(item);
+//            каскадирование
+            Person person = new Person("test cascading", 30);
 
-            item.setOwner(person);
-            person.getItems().add(item);
+            person.addItem(new Item("test cascading item1"));
+            person.addItem(new Item("test cascading item2"));
+            person.addItem(new Item("test cascading item3"));
+
+            session.persist(person);
 
             session.getTransaction().commit();
         }

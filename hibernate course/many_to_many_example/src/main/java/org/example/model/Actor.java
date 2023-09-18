@@ -1,14 +1,13 @@
 package org.example.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cascade;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "person")
-public class Person {
+@Table(name = "actor")
+public class Actor {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +19,17 @@ public class Person {
     @Column(name = "age")
     private int age;
 
-    @OneToMany(mappedBy = "owner")
-    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
-    private List<Item> items;
+    @ManyToMany
+    @JoinTable(
+            name = "actor_movie",
+            joinColumns = @JoinColumn(name = "actor_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id"))
+    private List<Movie> movies;
 
-    public Person() {}
+    public Actor() {
+    }
 
-    public Person(String name, int age) {
+    public Actor(String name, int age) {
         this.name = name;
         this.age = age;
     }
@@ -55,26 +58,30 @@ public class Person {
         this.age = age;
     }
 
-    public List<Item> getItems() {
-        return items;
+    public List<Movie> getMovies() {
+        return movies;
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
     }
 
-    public void addItem(Item item) {
-        if (this.items == null) {
-            this.items = new ArrayList<>();
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Actor actor = (Actor) o;
+        return id == actor.id && age == actor.age && Objects.equals(name, actor.name);
+    }
 
-        this.items.add(item);
-        item.setOwner(this);
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, age);
     }
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "Actor{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
